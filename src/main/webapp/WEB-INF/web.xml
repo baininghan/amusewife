@@ -18,7 +18,7 @@
 
   <servlet-mapping>
     <servlet-name>WechartServlet</servlet-name>
-    <url-pattern>/servlet/WechartServlet</url-pattern>
+    <url-pattern>/wechart</url-pattern>
   </servlet-mapping>	
   
   <listener>

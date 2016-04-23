@@ -39,6 +39,9 @@ public class WechartJob implements Job {
 			 System.out.println(JSON.toJSONString(content.get("ct")));
 			 System.out.println("==============================");
 		 }
+		 
+		 // 将消息推送到微信公众号
+		 
 	}
 
 }

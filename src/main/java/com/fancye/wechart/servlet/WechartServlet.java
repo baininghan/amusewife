@@ -37,7 +37,7 @@ public class WechartServlet extends HttpServlet {
 		while ((s = br.readLine()) != null) {
 			sb.append(s);
 		}
-		String xml = sb.toString();	//次即为接收到微信端发送过来的xml数据
+		String xml = sb.toString();	// 此即为接收到微信端发送过来的xml数据
 
 		String result = "";
 		/** 判断是否是微信接入激活验证，只有首次接入验证时才会收到echostr参数，此时需要把它直接返回 */
