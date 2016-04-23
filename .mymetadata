@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="amusewife"
+  id="myeclipse.1461396015453"
+  context-root="/amusewife"
+  j2ee-spec="6.0"
+  archive="amusewife.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
