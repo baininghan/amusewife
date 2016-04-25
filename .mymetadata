@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-module
   type="WEB"
-  name="amusewife"
+  name="fancye"
   id="myeclipse.1461396015453"
-  context-root="/amusewife"
+  context-root="/fancye"
   j2ee-spec="6.0"
-  archive="amusewife.war">
+  archive="fancye.war">
   <attributes>
     <attribute name="webrootdir" value="src/main/webapp" />
   </attributes>
