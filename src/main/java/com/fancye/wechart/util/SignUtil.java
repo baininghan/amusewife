@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class SignUtil {
 	
     // 与接口配置信息中的Token要一致
-    private static String token = "funny";
+    private static String token = "weixin";
 
     /**
      * 验证签名
