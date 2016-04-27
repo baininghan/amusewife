@@ -1,4 +1,8 @@
-#Mon Apr 25 22:51:23 CST 2016
+#Wed Apr 27 16:32:39 CST 2016
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/business.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/login.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/wxtest/text.jsp=UTF-8
+encoding//src/main/webapp/text.jsp=UTF-8
 encoding/<project>=UTF-8

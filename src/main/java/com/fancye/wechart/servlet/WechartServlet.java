@@ -1,30 +1,32 @@
 package com.fancye.wechart.servlet;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.security.MessageDigest;
-import java.util.Arrays;
+import java.io.Reader;
+import java.io.StringReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import me.chanjar.weixin.common.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.fancye.wechart.WxConstant;
+import com.alibaba.fastjson.util.IOUtils;
+import com.fancye.wechart.data.WxData;
+import com.fancye.wechart.process.Dispenser;
+import com.fancye.wechart.process.ParseXMLData;
+import com.fancye.wechart.process.Processor;
 import com.fancye.wechart.util.SignUtil;
 
 public class WechartServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 1L;
+	
+	private static final Logger logger = LoggerFactory.getLogger(WechartServlet.class);
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -38,40 +40,54 @@ public class WechartServlet extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		logger.info("Wechart start");
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-
-		/** 读取接收到的xml消息 */
-		StringBuffer sb = new StringBuffer();
-		InputStream is = request.getInputStream();
-		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-		BufferedReader br = new BufferedReader(isr);
-		String s = "";
-		while ((s = br.readLine()) != null) {
-			sb.append(s);
-		}
-		String xml = sb.toString();	// 此即为接收到微信端发送过来的xml数据
-
-		// 微信加密签名 
-		String signature = request.getParameter("signature");
-		// 时间戳  
-		String timestamp = request.getParameter("timestamp");
-		// 随机数
-		String nonce = request.getParameter("nonce");
-		// 随机字符串
-		String echostr = request.getParameter("echostr");
-		PrintWriter out = response.getWriter();
+		
+		PrintWriter writer = response.getWriter();
+		// 服务器开始时间
+//        long starttime = System.currentTimeMillis();
+        
+		String signature = request.getParameter("signature");// 微信加密签名 
+		String timestamp = request.getParameter("timestamp");// 时间戳  
+		String nonce = request.getParameter("nonce");// 随机数
+		String echostr = request.getParameter("echostr");// 随机字符串
 		
 		// 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
-		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
-			out.print(echostr);
+		if (!"".equals(echostr) && null != echostr && SignUtil.checkSignature(signature, timestamp, nonce)) {
+			logger.info("微信公众号绑定成功 !success:" + echostr);
+			writer.print(echostr);
 		} else {
+			logger.info("Wechart start message execute");
 			//正常的微信处理流程
-//			result = new WechatProcess().processWechatMag(xml);
+			WxData wxData = null;
+			try {
+				logger.info("stringBuilder : " + IOUtils.toString(request.getInputStream()));
+				
+				wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				writer.print("xmltojava fail");
+			}
+			
+			if (null == wxData) {
+				writer.print("wxData is null");
+			} else {
+				Processor processor = Dispenser.dispenserRequest(wxData);
+				if (null != processor) {
+	                String result = processor.process();
+	                if (result != null && !"".equals(result)) {
+	                    writer.print(result);
+	                }
+	                // 整个时长
+//	                long diffmillis = System.currentTimeMillis() - starttime;
+	            }
+			}
 		}
-
-		out.flush();
-		out.close();
+		
+		writer.flush();
+		writer.close();
 	}
 
 	/**
@@ -88,63 +104,5 @@ public class WechartServlet extends HttpServlet {
 			throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
-	private String exec(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            PrintWriter writer = response.getWriter();
-            // 服务器开始时间
-//            long starttime = System.currentTimeMillis();
-
-            String signature = request.getParameter("signature");
-            String timestamp = request.getParameter("timestamp");
-            String nonce = request.getParameter("nonce");
-            String echostr = request.getParameter("echostr");
-            String token = WxConstant.TOKEN;
-            String[] str = {token, timestamp, nonce};
-            Arrays.sort(str); // 字典序排序
-            String bigStr = str[0] + str[1] + str[2];
-
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(bigStr.getBytes());
-            byte[] b = md.digest();
-
-            StringBuilder sbDes = new StringBuilder();
-            String tmp;
-            for (int i = 0; i < b.length; i++) {
-                tmp = (Integer.toHexString(b[i] & 0xFF));
-                if (tmp.length() == 1) {
-                    sbDes.append("0");
-                }
-                sbDes.append(tmp);
-            }
-            String digest = sbDes.toString();
-
-            // 确认请求来至微信
-            if (digest.equals(signature)) {
-                // 认证 绑定功能
-                if (StringUtils.isNotEmpty(echostr)) {
-                    writer.print(echostr);
-                    // 绑定不需再往后走
-                    return echostr;
-                }
-
-                /** 读取接收到的xml消息 */
-        		StringBuffer sb = new StringBuffer();
-        		InputStream is = request.getInputStream();
-        		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-        		BufferedReader br = new BufferedReader(isr);
-        		String s = "";
-        		while ((s = br.readLine()) != null) {
-        			sb.append(s);
-        		}
-        		String xml = sb.toString();	// 此即为接收到微信端发送过来的xml数据
-            } else {
-                System.out.println("error:" + echostr);
-            }
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-		return "success";
-    }
 
 }

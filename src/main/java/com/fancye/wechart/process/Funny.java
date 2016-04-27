@@ -1,43 +1,62 @@
 package com.fancye.wechart.process;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fancye.wechart.util.PropertiesUtil;
 
 
 public class Funny {
 
 	private static final String apikey = "c9267621f53c24e8fa8f18d552e3c968";// 笑话接口的apikey
+	private static final String httpUrl = "http://apis.baidu.com/showapi_open_bus/showapi_joke/joke_text";
+	private static final String httpArg = "page=1";
+	
+	public static void main(String[] args) {
+		System.out.println(Funny.getFirstFunny());
+	}
 	
 	/**
-	 * @param args
+	 * 获得一条消息
+	 * @return
 	 */
-	public static void main(String[] args) {
-		String httpUrl = "http://apis.baidu.com/showapi_open_bus/showapi_joke/joke_text";
-		String httpArg = "page=1";
+	public static String getFirstFunny() {
+		List<JSONObject> list = getListFunny();
+//		for (JSONObject content : list) {
+//			System.out.println(JSON.toJSONString(content.get("title")));
+//			System.out.println(JSON.toJSONString(content.get("text")));
+//			System.out.println(JSON.toJSONString(content.get("type")));
+//			System.out.println(JSON.toJSONString(content.get("ct")));
+//			System.out.println("==============================");
+//		}
+
+		StringBuffer sb = new StringBuffer();
+		if (list.size() > 0) {
+			JSONObject content = list.get(0);
+			sb.append(content.get("title"))
+				.append("\r\n")
+				.append(content.get("text"))
+				.append("\r\n")
+				.append(content.get("ct"));
+			return sb.toString();
+		} else {
+			return "Funny is null";
+		}
+	}
+	
+	public static List<JSONObject> getListFunny(){
 		String jsonResult = request(httpUrl, httpArg);
-		 JSONObject jsonObj = JSON.parseObject(jsonResult);
-		 JSONObject showapi_res_body = (JSONObject)jsonObj.get("showapi_res_body");
-		 @SuppressWarnings("unchecked")
-		List<JSONObject> list = (List<JSONObject>)showapi_res_body.get("contentlist");
-		 for(JSONObject content : list) {
-			 System.out.println(JSON.toJSONString(content.get("title")));
-			 System.out.println(JSON.toJSONString(content.get("text")));
-			 System.out.println(JSON.toJSONString(content.get("type")));
-			 System.out.println(JSON.toJSONString(content.get("ct")));
-			 System.out.println("==============================");
-		 }
+		JSONObject jsonObj = JSON.parseObject(jsonResult);
+		JSONObject showapi_res_body = (JSONObject) jsonObj.get("showapi_res_body");
+		@SuppressWarnings("unchecked")
+		List<JSONObject> list = (List<JSONObject>) showapi_res_body.get("contentlist");
+		
+		return list;
 	}
 	
 
