@@ -1,5 +1,5 @@
 #surefire
-#Fri May 13 14:56:17 CST 2016
+#Fri May 13 15:25:35 CST 2016
 dirscanner.0.params=E\:\\Workspaces\\fancyewx\\target\\test-classes|[**/Test*.java, **/*Test.java, **/*TestCase.java]|[**/*$*]
 enableAssertions=true
 testSuiteDefinitionTestSourceDirectory=E\:\\Workspaces\\fancyewx\\src\\test\\java

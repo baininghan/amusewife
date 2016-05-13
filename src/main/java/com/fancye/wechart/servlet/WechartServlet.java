@@ -2,6 +2,7 @@ package com.fancye.wechart.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.util.IOUtils;
+import com.fancye.wechart.WxConstant;
 import com.fancye.wechart.data.WxData;
 import com.fancye.wechart.process.Dispenser;
 import com.fancye.wechart.process.ParseXMLData;
@@ -60,8 +62,43 @@ public class WechartServlet extends HttpServlet {
 			try {
 				logger.info("stringBuilder : " + IOUtils.toString(request.getInputStream()));
 				System.out.println("stringBuilder : " + IOUtils.toString(request.getInputStream()));
-
-				wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());
+				if (IOUtils.toString(request.getInputStream()).equals("")) {
+//					writer.write("success");
+					
+					// 手动设置回复文本消息,无论用户发出何种消息(仅供测试)
+					WxData data = new WxData();
+					data.setToUserName("fanxin_363310763");
+					data.setFromUserName("fanxin_363310763");
+					data.setMsgType(WxConstant.TEXT);
+					data.setContent("1");
+					
+					Processor processor = Dispenser.dispenserRequest(data);
+					if (null != processor) {
+		                String result = processor.process();
+		                if (result != null && !"".equals(result)) {
+		                    writer.print(result);
+		                }
+		                // 整个时长
+//		                long diffmillis = System.currentTimeMillis() - starttime;
+		            }
+					
+				}else{
+					wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());
+					
+					if (null == wxData) {
+						writer.print("wxData is null");
+					} else {
+						Processor processor = Dispenser.dispenserRequest(wxData);
+						if (null != processor) {
+			                String result = processor.process();
+			                if (result != null && !"".equals(result)) {
+			                    writer.print(result);
+			                }
+			                // 整个时长
+//			                long diffmillis = System.currentTimeMillis() - starttime;
+			            }
+					}
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -70,20 +107,6 @@ public class WechartServlet extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-			
-			if (null == wxData) {
-				writer.print("wxData is null");
-			} else {
-				Processor processor = Dispenser.dispenserRequest(wxData);
-				if (null != processor) {
-	                String result = processor.process();
-	                if (result != null && !"".equals(result)) {
-	                    writer.print(result);
-	                }
-	                // 整个时长
-//	                long diffmillis = System.currentTimeMillis() - starttime;
-	            }
 			}
 		}
 		
