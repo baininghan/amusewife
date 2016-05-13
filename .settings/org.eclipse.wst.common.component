@@ -3,7 +3,6 @@
     <wb-module deploy-name="fancye">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resource"/>
         <dependent-module archiveName="weixin-java-common-1.3.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weixin-java-common/weixin-java-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>

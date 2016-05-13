@@ -63,12 +63,16 @@ public class WechartServlet extends HttpServlet {
 			WxData wxData = null;
 			try {
 				logger.info("stringBuilder : " + IOUtils.toString(request.getInputStream()));
-				
+
 				wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				writer.print("xmltojava fail");
+				try {
+					writer.print("xmltojava fail : " + IOUtils.toString(request.getInputStream()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 			if (null == wxData) {
