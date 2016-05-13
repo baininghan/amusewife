@@ -66,25 +66,25 @@ public class WechartServlet extends HttpServlet {
 //					writer.write("success");
 					
 					// 手动设置回复文本消息,无论用户发出何种消息(仅供测试)
-//					WxData data = new WxData();
-//					data.setToUserName("fanxin_363310763");
-//					data.setFromUserName("fanxin_363310763");
-//					data.setMsgType(WxConstant.TEXT);
-//					data.setContent("1");
-//					
-//					Processor processor = Dispenser.dispenserRequest(data);
-//					if (null != processor) {
-//		                String result = processor.process();
-//		                if (result != null && !"".equals(result)) {
-//		                    writer.print(result);
-//		                }
-//		            }
+					WxData data = new WxData();
+					data.setToUserName("fanxin_363310763");// 接收方帐号（收到的OpenID）
+					data.setFromUserName("fancyebai");// 微信号
+					data.setMsgType(WxConstant.TEXT);
+					data.setContent("1");
 					
-					writer.write("<xml><ToUserName><![CDATA[fanxin_363310763]]></ToUserName>" +
-							"<FromUserName><![CDATA[fanxin_363310763]]></FromUserName>" +
-							"<CreateTime><![CDATA[2016-05-13 08:10:01.866 UTC]]></CreateTime>" +
-							"<MsgType><![CDATA[text]]></MsgType>" +
-							"<Content><![CDATA[helloFunny]]></Content></xml>");
+					Processor processor = Dispenser.dispenserRequest(data);
+					if (null != processor) {
+		                String result = processor.process();
+		                if (result != null && !"".equals(result)) {
+		                    writer.print(result);
+		                }
+		            }
+					
+//					writer.write("<xml><ToUserName><![CDATA[fanxin_363310763]]></ToUserName>" +
+//							"<FromUserName><![CDATA[fanxin_363310763]]></FromUserName>" +
+//							"<CreateTime><![CDATA[2016-05-13 08:10:01.866 UTC]]></CreateTime>" +
+//							"<MsgType><![CDATA[text]]></MsgType>" +
+//							"<Content><![CDATA[helloFunny]]></Content></xml>");
 					
 				}else{
 					wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());
