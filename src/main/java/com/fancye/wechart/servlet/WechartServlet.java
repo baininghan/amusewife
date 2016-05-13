@@ -1,11 +1,7 @@
 package com.fancye.wechart.servlet;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,6 +59,7 @@ public class WechartServlet extends HttpServlet {
 			WxData wxData = null;
 			try {
 				logger.info("stringBuilder : " + IOUtils.toString(request.getInputStream()));
+				System.out.println("stringBuilder : " + IOUtils.toString(request.getInputStream()));
 
 				wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());
 			} catch (Exception e) {
