@@ -63,22 +63,22 @@ public class WechartServlet extends HttpServlet {
 				logger.info("stringBuilder : " + IOUtils.toString(request.getInputStream()));
 				System.out.println("stringBuilder : " + IOUtils.toString(request.getInputStream()));
 				if (IOUtils.toString(request.getInputStream()).equals("")) {
-					writer.write("success");
+//					writer.write("success");
 					
 					// 手动设置回复文本消息,无论用户发出何种消息(仅供测试)
-//					WxData data = new WxData();
-//					data.setToUserName("fanxin_363310763");
-//					data.setFromUserName("fanxin_363310763");
-//					data.setMsgType(WxConstant.TEXT);
-//					data.setContent("1");
-//					
-//					Processor processor = Dispenser.dispenserRequest(data);
-//					if (null != processor) {
-//		                String result = processor.process();
-//		                if (result != null && !"".equals(result)) {
-//		                    writer.print(result);
-//		                }
-//		            }
+					WxData data = new WxData();
+					data.setToUserName("fanxin_363310763");
+					data.setFromUserName("fanxin_363310763");
+					data.setMsgType(WxConstant.TEXT);
+					data.setContent("1");
+					
+					Processor processor = Dispenser.dispenserRequest(data);
+					if (null != processor) {
+		                String result = processor.process();
+		                if (result != null && !"".equals(result)) {
+		                    writer.print(result);
+		                }
+		            }
 					
 				}else{
 					wxData = ParseXMLData.parseXMLData(request.getInputStream(), new WxData());

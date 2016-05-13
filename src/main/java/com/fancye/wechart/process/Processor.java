@@ -27,7 +27,8 @@ public class Processor {
 		String type = wxData.getMsgType();
 		if (type.equals(WxConstant.TEXT)) {//仅处理文本回复内容
 			if ("1".equals(wxData.getContent())) {
-				content =  Funny.getFirstFunny();
+				//content =  Funny.getFirstFunny();
+				content = "helloFunny";
 			}
 		}
 		
