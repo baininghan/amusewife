@@ -67,8 +67,8 @@ public class WechartServlet extends HttpServlet {
 					
 					// 手动设置回复文本消息,无论用户发出何种消息(仅供测试)
 					WxData data = new WxData();
-					data.setToUserName("fanxin_363310763");// 接收方帐号（收到的OpenID）
-					data.setFromUserName("fancyebai");// 微信号
+					data.setToUserName("fancyebai");// 开发者微信号
+					data.setFromUserName("fanxin_363310763");// 发送方帐号（一个OpenID）
 					data.setMsgType(WxConstant.TEXT);
 					data.setContent("1");
 					
